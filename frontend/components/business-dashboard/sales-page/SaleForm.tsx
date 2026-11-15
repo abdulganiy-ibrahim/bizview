@@ -223,7 +223,7 @@ export default function SaleForm({ form, products, onCancel }: SaleFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`${primaryButton} w-full sm:w-auto`}
+          className={`${primaryButton} w-full sm:w-auto cursor-pointer`}
         >
           {isSubmitting ? "Saving..." : "Create sale"}
         </button>

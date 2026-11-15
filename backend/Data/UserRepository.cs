@@ -1,7 +1,7 @@
-namespace BusinessManagementApi.Data;
-
 using Npgsql;
 using BusinessManagementApi.Models;
+
+namespace BusinessManagementApi.Data;
 
 public class UserRepository
 {
@@ -12,12 +12,12 @@ public class UserRepository
     _connectionString = connectionString;
   }
 
-  public UserRecord? GetById(Guid id)
+  public async Task<UserRecord?> GetByIdAsync(Guid id)
   {
-    using var conn = new NpgsqlConnection(_connectionString);
-    conn.Open();
+    await using var conn = new NpgsqlConnection(_connectionString);
+    await conn.OpenAsync();
 
-    using var cmd = new NpgsqlCommand(
+    await using var cmd = new NpgsqlCommand(
         """
         SELECT
           id,
@@ -33,9 +33,9 @@ public class UserRepository
 
     cmd.Parameters.AddWithValue("id", id);
 
-    using var reader = cmd.ExecuteReader();
+    await using var reader = await cmd.ExecuteReaderAsync();
 
-    if (reader.Read())
+    if (await reader.ReadAsync())
     {
       return new UserRecord(
         reader.GetGuid(0),

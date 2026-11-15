@@ -17,11 +17,11 @@ public class UserController : ControllerBase
   }
 
   [HttpGet("me")]
-  public IActionResult GetCurrentUser()
+  public async Task<IActionResult> GetCurrentUser()
   {
     var user = (UserRecord)HttpContext.Items["CurrentUser"]!;
 
-    var userData = _userService.GetById(user.Id);
+    var userData = await _userService.GetByIdAsync(user.Id);
 
     return Ok(userData);
   }

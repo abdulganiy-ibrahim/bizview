@@ -12,9 +12,9 @@ public class UserService
     _userRepository = userRepository;
   }
 
-  public UserRecord? GetById(Guid userId)
+  public async Task<UserRecord?> GetByIdAsync(Guid userId)
   {
-    var user = _userRepository.GetById(userId);
+    var user = await _userRepository.GetByIdAsync(userId);
 
     return user;
   } 

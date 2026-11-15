@@ -1,6 +1,6 @@
-namespace BusinessManagementApi.Middleware;
-
 using BusinessManagementApi.Data;
+
+namespace BusinessManagementApi.Middleware;
 
 public class UserExistsMiddleware
 {
@@ -25,7 +25,7 @@ public class UserExistsMiddleware
           return;
       }
 
-      var user = userRepository.GetById(userId);
+      var user = await userRepository.GetByIdAsync(userId);
 
       if (user is null)
       {

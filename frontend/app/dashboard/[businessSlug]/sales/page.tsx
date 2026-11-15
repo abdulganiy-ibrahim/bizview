@@ -17,7 +17,6 @@ export default async function SalesPage({ params }: SalesPageProps) {
   const business = await getBusinessBySlug(api, businessSlug);
   if (!business) notFound();
 
-  // The two requests don't depend on each other, so run them together
   const [sales, products] = await Promise.all([
     listOrEmpty(() => getSalesByBusinessId(api, business.id)),
     listOrEmpty(() => getProductsByBusinessId(api, business.id)),

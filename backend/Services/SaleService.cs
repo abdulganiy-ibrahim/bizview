@@ -1,5 +1,6 @@
 using BusinessManagementApi.Models;
 using BusinessManagementApi.Data;
+using BusinessManagementApi.Exceptions;
 
 namespace BusinessManagementApi.Services;
 
@@ -34,12 +35,12 @@ public class SaleService
 
     if (newSale.SaleItems == null || newSale.SaleItems.Count == 0)
     {
-      throw new ArgumentException("Sale must contain at least one item.");
+      throw new AppException("Sale must contain at least one item.", 400);
     }
 
     if (newSale.AmountPaid < 0)
     {
-      throw new ArgumentException("Amount paid cannot be negative.");
+      throw new AppException("Amount paid cannot be negative.", 400);
     }
 
     var saleItems = new List<AddSaleItemRecord>();
@@ -49,14 +50,14 @@ public class SaleService
     {
       if (item.Quantity <= 0)
       {
-        throw new ArgumentException($"Quantity for product {item.ProductId} must be greater than zero.");
+        throw new AppException($"Quantity for product {item.ProductId} must be greater than zero.", 400);
       }
 
       var product = await _productRepository.GetByIdAsync(item.ProductId);
 
       if (product == null || product.BusinessId != businessId)
       {
-        throw new ArgumentException($"Product {item.ProductId} is not found or does not belong to the specified business.");
+        throw new AppException($"Product {item.ProductId} is not found or does not belong to the specified business.", 400);
       }
 
       var totalPrice = product.SellingPrice * item.Quantity;
@@ -68,7 +69,7 @@ public class SaleService
 
     if (newSale.AmountPaid > totalAmount)
     {
-      throw new ArgumentException("Amount paid cannot be greater than the total amount.");
+      throw new AppException("Amount paid cannot be greater than the total amount.", 400);
     }
 
     var sale = new AddSaleRecord(
@@ -99,8 +100,8 @@ public class SaleService
 
         if (inventoryId is null)
         {
-          throw new ArgumentException(
-            $"Not enough stock for product {item.ProductId}, or it has no inventory.");
+          throw new AppException(
+            $"Not enough stock for product {item.ProductId}, or it has no inventory.", 400);
         }
 
         var newInventoryTransaction = new CreateInventoryTransactionReq(
@@ -150,7 +151,7 @@ public class SaleService
   {
     if (amount <= 0)
     {
-      throw new ArgumentException("Amount must be greater than zero.");
+      throw new AppException("Amount must be greater than zero.", 400);
     }
 
     var sale = await _saleRepository.GetSaleByIdAsync(saleId);
@@ -159,19 +160,19 @@ public class SaleService
     // so nobody can discover which sale ids exist
     if (sale is null || sale.BusinessId != businessId)
     {
-      throw new KeyNotFoundException("The sale does not exist.");
+      throw new AppException("The sale does not exist.", 404);
     }
 
     var debit = await _debitSaleRepository.GetBySaleIdAsync(saleId);
 
     if (debit is null)
     {
-      throw new KeyNotFoundException("There is no debit record for this sale.");
+      throw new AppException("There is no debit record for this sale.", 404);
     }
 
     if (amount > debit.AmountDue)
     {
-      throw new ArgumentException("Amount cannot be greater than the amount due.");
+      throw new AppException("Amount cannot be greater than the amount due.", 400);
     }
 
     // new debit payment record data

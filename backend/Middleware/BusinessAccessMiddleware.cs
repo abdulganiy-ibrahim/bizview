@@ -2,6 +2,8 @@ using BusinessManagementApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using BusinessManagementApi.Data;
 
+namespace BusinessManagementApi.Middleware;
+
 public class BusinessAccessMiddleware
 {
     private readonly RequestDelegate _next;
