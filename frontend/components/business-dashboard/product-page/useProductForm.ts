@@ -1,6 +1,7 @@
 "use client";
 
 import { getNetworkErrorMessage } from "@/lib/network/networkMessages";
+import { getApiErrorMessage } from "@/utils/apiErrorMessage";
 import { useState, type FormEvent } from "react";
 import {
   emptyValues,
@@ -15,10 +16,8 @@ export type {
   ProductPayload,
 } from "@/utils/productFormUtils";
 
-// TPayload is whatever the form sends: a ProductPayload when editing,
-// a CreateProduct when creating. It comes from the buildPayload you pass in.
+
 type UseProductFormOptions<TPayload> = {
-  /** Only the fields you want pre-filled (the rest start empty) */
   initialValues?: Partial<ProductFormValues>;
   /** Checks the values and returns an error message per field */
   validate: (values: ProductFormValues) => ProductFormErrors;
@@ -61,8 +60,10 @@ export function useProductForm<TPayload>({
     try {
       await onSubmit(buildPayload(values));
     } catch (error) {
+      // 1. the connection  2. the API answered with an error  3. an Error thrown by onSubmit
       setServerError(
         getNetworkErrorMessage(error) ??
+          getApiErrorMessage(error) ??
           (error instanceof Error
             ? error.message
             : "Something went wrong. Please try again."),

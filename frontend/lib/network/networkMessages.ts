@@ -1,3 +1,5 @@
+import { isAxiosError } from "axios";
+
 export const NETWORK_MESSAGES = {
   offline: "No internet connection. Changes can't be saved until you're back online.",
   slow: "Your internet connection is slow. Things may take longer than usual.",
@@ -6,12 +8,15 @@ export const NETWORK_MESSAGES = {
   requestFailed: "We couldn't reach the server. Check your internet connection and try again.",
 };
 
-// Returns a connection-related message, or null when the error is not about the network.
-// Use it in a catch block: getNetworkErrorMessage(error) ?? "Something went wrong."
 export function getNetworkErrorMessage(error?: unknown): string | null {
   // The browser knows it has no connection
   if (typeof navigator !== "undefined" && !navigator.onLine) {
     return NETWORK_MESSAGES.offline;
+  }
+
+  // axios (browserApi): no response at all means the request never got an answer:
+  if (isAxiosError(error) && !error.response && error.code !== "ERR_CANCELED") {
+    return NETWORK_MESSAGES.requestFailed;
   }
 
   // The connection dropped during the request. fetch fails with a TypeError

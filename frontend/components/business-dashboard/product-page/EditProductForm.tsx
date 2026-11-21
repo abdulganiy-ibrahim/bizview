@@ -7,7 +7,10 @@ import ProductForm from "./ProductForm";
 import { useProductForm } from "./useProductForm";
 import { updateProduct } from "@/lib/data/productData";
 import { browserApi } from "@/lib/api/browserApi";
-import { Business } from "@/types/BusinessType";
+import {
+  buildProductPayload,
+  validateProductForm,
+} from "@/utils/productFormUtils";
 
 type EditProductFormProps = {
   product: Product;
@@ -20,7 +23,7 @@ type EditProductFormProps = {
 export default function EditProductForm({
   product,
   onClose,
-  businessId
+  businessId,
 }: EditProductFormProps) {
   const router = useRouter();
 
@@ -31,6 +34,8 @@ export default function EditProductForm({
       costPrice: String(product.costPrice),
       sellingPrice: String(product.sellingPrice),
     },
+    validate: validateProductForm, // the four product fields only
+    buildPayload: buildProductPayload, // -> ProductPayload
     onSubmit: async (payload) => {
       await updateProduct(browserApi, businessId, product.id, payload);
       router.refresh(); // reload the product list

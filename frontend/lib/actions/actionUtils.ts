@@ -1,17 +1,30 @@
 import { isAxiosError } from "axios";
+import { getApiErrorMessage } from "@/utils/apiErrorMessage";
 
 // What every server action returns, so the UI always knows if it worked
 export type ActionResult<T = undefined> =
   | { success: true; data: T }
   | { success: false; message: string };
 
-// Pulls a readable message out of a failed backend call
+const FALLBACK_MESSAGE = "Something went wrong. Please try again.";
+
+// Turns any error into a message for the user.
 export function getErrorMessage(error: unknown): string {
   if (isAxiosError(error)) {
-    // TODO: match this to the error shape your backend returns
-    const message = error.response?.data?.message;
-    if (typeof message === "string" && message) return message;
+    console.error("[server action] request failed:", {
+      code: error.code, // e.g. ECONNREFUSED when the backend can't be reached
+      status: error.response?.status,
+      method: error.config?.method?.toUpperCase(),
+      url: `${error.config?.baseURL ?? ""}${error.config?.url ?? ""}`,
+      body: error.response?.data,
+    });
+
+    // No response at all: the backend could not be reached
+    if (!error.response) return "Could not reach the server. Please try again.";
+
+    return getApiErrorMessage(error) ?? FALLBACK_MESSAGE;
   }
 
-  return "Something went wrong. Please try again.";
+  console.error("[server action] unexpected error:", error);
+  return FALLBACK_MESSAGE;
 }

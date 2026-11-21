@@ -1,0 +1,37 @@
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Frontend dependencies and build artifacts
+frontend/node_modules
+frontend/.next
+frontend/dist
+frontend/build
+
+# .NET build artifacts
+**/bin
+**/obj
+
+# IDE and editor files
+.vs
+.vscode
+.idea
+*.user
+*.suo
+
+# Environment and secrets
+**/.env
+**/.env.*
+**/secrets.json
+
+# Logs
+**/*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
