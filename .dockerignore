@@ -33,5 +33,6 @@ frontend/build
 .DS_Store
 Thumbs.db
 
-# Documentation
+# Project Documentation
+docs/
 README.md
