@@ -5,15 +5,15 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy project file and restore dependencies
-COPY ["backend/businessmanagementApi.csproj", "backend/"]
-RUN dotnet restore "backend/businessmanagementApi.csproj"
+COPY ["backend/BusinessManagementApi.csproj", "backend/"]
+RUN dotnet restore "backend/BusinessManagementApi.csproj"
 
 # Copy remaining source code
 COPY . .
 
 # Publish application
 WORKDIR /src/backend
-RUN dotnet publish "businessmanagementApi.csproj" \
+RUN dotnet publish "BusinessManagementApi.csproj" \
     -c Release \
     -o /app/publish \
     /p:UseAppHost=false
@@ -30,4 +30,4 @@ EXPOSE 10000
 
 COPY --from=build /app/publish .
 
-ENTRYPOINT ["dotnet", "businessmanagementApi.dll"]
+ENTRYPOINT ["dotnet", "BusinessManagementApi.dll"]
