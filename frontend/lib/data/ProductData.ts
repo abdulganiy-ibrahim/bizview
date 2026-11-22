@@ -1,3 +1,4 @@
+// deleted old productData.ts and added it back
 import type { AxiosInstance } from 'axios';
 import { CreateProduct, Product, UpdateProduct } from '@/types/productType';
 
