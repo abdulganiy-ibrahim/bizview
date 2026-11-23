@@ -1,9 +1,5 @@
 "use server";
 
-// Client components can't call your product helpers directly: they need `api`,
-// which comes from getServerApi (server only). This action runs on the server,
-// builds `api`, calls the helper, and returns a simple result.
-
 import { getServerApi } from "@/lib/api/serverApi";
 import { createProduct } from "@/lib/data/productData";
 import type { CreateProduct } from "@/types/productType";
