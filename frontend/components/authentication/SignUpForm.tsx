@@ -1,6 +1,7 @@
 'use client';
 
 import { supabaseBrowserClient } from '@/lib/supabase/supabaseClient';
+import { getSignUpRedirectUrl } from '@/lib/supabase/redirectUrls';
 import { useState } from "react"
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
@@ -40,7 +41,7 @@ export default function SignUpForm({ onSwitchToLogin }: SignUpFormProps) {
         data: {
           name: formData.name, // stored as user metadata in Supabase
         },
-        emailRedirectTo: `${window.location.origin}/sign-up`,
+        emailRedirectTo: getSignUpRedirectUrl(),
       },
     });
 
