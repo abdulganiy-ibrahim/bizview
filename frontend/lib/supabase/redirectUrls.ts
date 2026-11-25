@@ -1,7 +1,7 @@
-const NODE_ENV = process.env.NODE_ENVIRONMENT;
+const environment = process.env.NEXT_PUBLIC_NODE_ENVIRONMENT;
 
 export function getSignUpRedirectUrl(): string {
-  if (NODE_ENV === 'production') {
+  if (environment === 'production') {
     return "https://bizview-pi.vercel.app/sign-up";
   }
 
@@ -9,7 +9,7 @@ export function getSignUpRedirectUrl(): string {
 }
 
 export function getUpdatePasswordRedirectUrl(): string {
-  if (NODE_ENV === "production"){
+  if (environment === "production"){
     return "https://bizview-pi.vercel.app/update-password";
   }
 
